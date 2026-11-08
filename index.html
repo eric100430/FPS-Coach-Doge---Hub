@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FPS Coach Doge - 電競戰術與知識庫 Hub</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+        body {
+            background-color: #0f172a;
+            color: #f8fafc;
+            line-height: 1.6;
+            padding-bottom: 50px;
+        }
+        header {
+            background-color: #1e293b;
+            padding: 20px 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #22c55e;
+        }
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #22c55e;
+            text-decoration: none;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .hero {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #f8fafc;
+        }
+        .hero p {
+            color: #94a3b8;
+            font-size: 1.1rem;
+        }
+        .alert-box {
+            background-color: rgba(244, 63, 94, 0.15);
+            border-left: 4px solid #f43f5e;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            color: #fda4af;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background-color: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 25px;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: #22c55e;
+        }
+        .card h3 {
+            color: #22c55e;
+            margin-bottom: 12px;
+            font-size: 1.25rem;
+        }
+        .card p {
+            color: #94a3b8;
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+        }
+        .tag {
+            display: inline-block;
+            background-color: #334155;
+            color: #38bdf8;
+            font-size: 0.8rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            color: #64748b;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="#" class="logo">🎮 FPS Coach Doge Hub</a>
+        <span class="tag">v1.0.0 AGENTS Spec</span>
+    </header>
+
+    <div class="container">
+        <div class="hero">
+            <h1>FPS 戰術殘局與電競知識庫</h1>
+            <p>由 Coach Doge 打造的冷靜戰術指引與靈敏度換算平台</p>
+        </div>
+
+        <div class="alert-box">
+            ⚠️ <strong>Coach Doge 心態防爆提醒：</strong> 進入殘局時，第一步請先按 Tab 鍵將麥克風裡咆哮的隊友 Mute 掉，保持頭腦冷靜才能拿下 Clutch！
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <h3>🎯 跨遊戲靈敏度轉換指南</h3>
+                <p>收錄 Valorant 與 CS2 靈敏度精準轉換公式（<code>CS2 Sens = Val Sens × 3.181</code>），以及 eDPI 黃金數值計算。</p>
+                <span class="tag">機制數據</span>
+            </div>
+
+            <div class="card">
+                <h3>💣 Ascent A 點 1v2 殘局處置</h3>
+                <p>解析已下包剩 20 秒時的長斜角拉槍、假解包（Fake Defuse）1.5 秒時間差與爆頭線站位技巧。</p>
+                <span class="tag">Valorant 戰術</span>
+            </div>
+
+            <div class="card">
+                <h3>💨 CS2 急停與體積雲煙霧技巧</h3>
+                <p>解析 Counter-Strafe 反向鍵點按消除慣性機制，以及如何利用手榴彈在體積雲煙霧（Volumetric Smoke）上開洞。</p>
+                <span class="tag">CS2 觀念</span>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2026 FPS Coach Doge. Built strictly following AGENTS.md rules.</p>
+        </footer>
+    </div>
+
+</body>
+</html>
