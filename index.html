@@ -24,6 +24,7 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: 2px solid #22c55e;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
         .logo {
             font-size: 1.5rem;
@@ -38,16 +39,16 @@
         }
         .hero {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
         .hero h1 {
-            font-size: 2.5rem;
+            font-size: 2.3rem;
             margin-bottom: 10px;
             color: #f8fafc;
         }
         .hero p {
             color: #94a3b8;
-            font-size: 1.1rem;
+            font-size: 1.05rem;
         }
         .alert-box {
             background-color: rgba(244, 63, 94, 0.15);
@@ -57,6 +58,53 @@
             margin-bottom: 30px;
             color: #fda4af;
         }
+
+        /* 互動控制區（搜尋框 + 頁籤按鈕） */
+        .controls {
+            background-color: #1e293b;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border: 1px solid #334155;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .search-input {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 1px solid #475569;
+            background-color: #0f172a;
+            color: #f8fafc;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .search-input:focus {
+            border-color: #22c55e;
+        }
+        .tab-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            background-color: #334155;
+            color: #94a3b8;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+        .tab-btn.active, .tab-btn:hover {
+            background-color: #22c55e;
+            color: #0f172a;
+        }
+
+        /* 卡片網格與樣式 */
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -67,7 +115,11 @@
             border: 1px solid #334155;
             border-radius: 12px;
             padding: 25px;
+            cursor: pointer;
             transition: transform 0.2s, border-color 0.2s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
         .card:hover {
             transform: translateY(-5px);
@@ -76,7 +128,7 @@
         .card h3 {
             color: #22c55e;
             margin-bottom: 12px;
-            font-size: 1.25rem;
+            font-size: 1.2rem;
         }
         .card p {
             color: #94a3b8;
@@ -84,14 +136,51 @@
             margin-bottom: 15px;
         }
         .tag {
-            display: inline-block;
+            align-self: flex-start;
             background-color: #334155;
             color: #38bdf8;
             font-size: 0.8rem;
-            padding: 4px 8px;
+            padding: 4px 10px;
             border-radius: 4px;
             font-weight: bold;
         }
+
+        /* 彈窗對話視窗 (Modal) */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(15, 23, 42, 0.85);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+        .modal-content {
+            background-color: #1e293b;
+            border: 2px solid #22c55e;
+            border-radius: 12px;
+            max-width: 600px;
+            width: 100%;
+            padding: 30px;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 1.5rem;
+            color: #94a3b8;
+            cursor: pointer;
+        }
+        .close-btn:hover { color: #f43f5e; }
+        .modal-title { color: #22c55e; margin-bottom: 15px; font-size: 1.4rem; }
+        .modal-body { color: #cbd5e1; font-size: 1rem; line-height: 1.8; margin-bottom: 20px; }
+
         footer {
             text-align: center;
             margin-top: 60px;
@@ -104,7 +193,7 @@
 
     <header>
         <a href="#" class="logo">🎮 FPS Coach Doge Hub</a>
-        <span class="tag">v1.0.0 AGENTS Spec</span>
+        <span class="tag" style="background:#0f172a; color:#22c55e;">v1.2 Interactive</span>
     </header>
 
     <div class="container">
@@ -117,24 +206,45 @@
             ⚠️ <strong>Coach Doge 心態防爆提醒：</strong> 進入殘局時，第一步請先按 Tab 鍵將麥克風裡咆哮的隊友 Mute 掉，保持頭腦冷靜才能拿下 Clutch！
         </div>
 
-        <div class="grid">
-            <div class="card">
-                <h3>🎯 跨遊戲靈敏度轉換指南</h3>
-                <p>收錄 Valorant 與 CS2 靈敏度精準轉換公式（<code>CS2 Sens = Val Sens × 3.181</code>），以及 eDPI 黃金數值計算。</p>
+        <!-- 前端互動控制項 -->
+        <div class="controls">
+            <input type="text" id="searchInput" class="search-input" placeholder="🔍 輸入關鍵字搜尋戰術（例如：Valorant, CS2, 靈敏度, 急停, 煙霧）..." oninput="filterCards()">
+            
+            <div class="tab-group">
+                <button class="tab-btn active" onclick="setCategory('all', this)">全部戰術</button>
+                <button class="tab-btn" onclick="setCategory('valorant', this)">Valorant 專區</button>
+                <button class="tab-btn" onclick="setCategory('cs2', this)">CS2 觀念</button>
+                <button class="tab-btn" onclick="setCategory('sens', this)">機制與數據</button>
+            </div>
+        </div>
+
+        <!-- 戰術卡片區域 -->
+        <div class="grid" id="cardGrid">
+            
+            <div class="card" data-category="sens" data-title="跨遊戲靈敏度轉換指南" onclick="openModal('🎯 跨遊戲靈敏度轉換指南', 'Coach Doge 詳細戰術拆解：<br>1. <strong>精準換算公式</strong>：CS2 靈敏度 = Valorant 靈敏度 × 3.181（如 Val 0.35 @ 800DPI 換算為 CS2 1.113）。<br>2. <strong>eDPI 黃金區間</strong>：職業選手平均 eDPI 落在 200~400 之間，切勿頻繁調整靈敏度破壞肌肉記憶。<br>3. <strong>教練指引</strong>：改完數值後去靶場打 10 分鐘 Bot 熟悉準心移動速度！')">
+                <div>
+                    <h3>🎯 跨遊戲靈敏度轉換指南</h3>
+                    <p>收錄 Valorant 與 CS2 靈敏度精準轉換公式（CS2 Sens = Val Sens × 3.181），以及 eDPI 黃金數值計算。</p>
+                </div>
                 <span class="tag">機制數據</span>
             </div>
 
-            <div class="card">
-                <h3>💣 Ascent A 點 1v2 殘局處置</h3>
-                <p>解析已下包剩 20 秒時的長斜角拉槍、假解包（Fake Defuse）1.5 秒時間差與爆頭線站位技巧。</p>
+            <div class="card" data-category="valorant" data-title="Ascent A 點 1v2 殘局處置" onclick="openModal('💣 Ascent A 點 1v2 殘局處置', 'Coach Doge 詳細戰術拆解：<br>1. <strong>心態防爆</strong>：先按 Tab 鍵 Mute 咆哮隊友，20 秒非常充裕！<br>2. <strong>站位選擇</strong>：滿血優勢站拉長斜角（如 Hell 或 A Long），預先將準心鎖定爆頭線高度。<br>3. <strong>假解包心理戰</strong>：聽見拆包聲等 1.2~1.5 秒再拉出，逼迫對手做出假解包動作露頭，分次清掉對手！')">
+                <div>
+                    <h3>💣 Ascent A 點 1v2 殘局處置</h3>
+                    <p>解析已下包剩 20 秒時的長斜角拉槍、假解包（Fake Defuse）1.5 秒時間差與爆頭線站位技巧。</p>
+                </div>
                 <span class="tag">Valorant 戰術</span>
             </div>
 
-            <div class="card">
-                <h3>💨 CS2 急停與體積雲煙霧技巧</h3>
-                <p>解析 Counter-Strafe 反向鍵點按消除慣性機制，以及如何利用手榴彈在體積雲煙霧（Volumetric Smoke）上開洞。</p>
+            <div class="card" data-category="cs2" data-title="CS2 急停與體積雲煙霧技巧" onclick="openModal('💨 CS2 急停與體積雲煙霧技巧', 'Coach Doge 詳細戰術拆解：<br>1. <strong>Counter-Strafe 急停</strong>：移動中開槍子彈會亂飛！射擊前瞬間放開方向鍵並按反向鍵（按 A 點 D）讓速度歸零。<br>2. <strong>體積雲煙霧打洞</strong>：CS2 煙霧彈可被手榴彈短暫吹散，或被子彈打出視線洞口，善用穿煙取得戰術優勢。<br>3. <strong>教練指引</strong>：先在死鬥模式練習急停節奏，確保開槍第一發準確命中頭部。')">
+                <div>
+                    <h3>💨 CS2 急停與體積雲煙霧技巧</h3>
+                    <p>解析 Counter-Strafe 反向鍵點按消除慣性機制，以及如何利用手榴彈在體積雲煙霧（Volumetric Smoke）上開洞。</p>
+                </div>
                 <span class="tag">CS2 觀念</span>
             </div>
+
         </div>
 
         <footer>
@@ -142,5 +252,388 @@
         </footer>
     </div>
 
+    <!-- 戰術詳情彈窗視窗 -->
+    <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <span class="close-btn" onclick="closeModalDirect()">✕</span>
+            <h2 class="modal-title" id="modalTitle">戰術標題</h2>
+            <div class="modal-body" id="modalBody">戰術內容詳情...</div>
+            <button class="tab-btn active" style="width:100%;" onclick="closeModalDirect()">收到，立即執行戰術！</button>
+        </div>
+    </div>
+
+    <!-- 前端互動邏輯 (JavaScript) -->
+    <script>
+        let currentCategory = 'all';
+
+        // 搜尋與分類過濾函數
+        function filterCards() {
+            const searchText = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('.card');
+
+            cards.forEach(card => {
+                const title = card.getAttribute('data-title').toLowerCase();
+                const content = card.innerText.toLowerCase();
+                const category = card.getAttribute('data-category');
+
+                const matchesSearch = title.includes(searchText) || content.includes(searchText);
+                const matchesCategory = (currentCategory === 'all') || (category === currentCategory);
+
+                if (matchesSearch && matchesCategory) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // 切換分類頁籤
+        function setCategory(category, btn) {
+            currentCategory = category;
+            
+            // 更新按鈕 active 狀態
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            filterCards();
+        }
+
+        // 開啟彈窗
+        function openModal(title, bodyText) {
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalBody').innerHTML = bodyText;
+            document.getElementById('modalOverlay').style.display = 'flex';
+        }
+
+        // 關閉彈窗
+        function closeModal(event) {
+            if (event.target.id === 'modalOverlay') {
+                document.getElementById('modalOverlay').style.display = 'none';
+            }
+        }
+
+        function closeModalDirect() {
+            document.getElementById('modalOverlay').style.display = 'none';
+        }
+    </script>
+</body>
+</html><!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FPS Coach Doge - 電競戰術與知識庫 Hub</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+        body {
+            background-color: #0f172a;
+            color: #f8fafc;
+            line-height: 1.6;
+            padding-bottom: 50px;
+        }
+        header {
+            background-color: #1e293b;
+            padding: 20px 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #22c55e;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #22c55e;
+            text-decoration: none;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .hero {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .hero h1 {
+            font-size: 2.3rem;
+            margin-bottom: 10px;
+            color: #f8fafc;
+        }
+        .hero p {
+            color: #94a3b8;
+            font-size: 1.05rem;
+        }
+        .alert-box {
+            background-color: rgba(244, 63, 94, 0.15);
+            border-left: 4px solid #f43f5e;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            color: #fda4af;
+        }
+
+        /* 互動控制區（搜尋框 + 頁籤按鈕） */
+        .controls {
+            background-color: #1e293b;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border: 1px solid #334155;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .search-input {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 1px solid #475569;
+            background-color: #0f172a;
+            color: #f8fafc;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .search-input:focus {
+            border-color: #22c55e;
+        }
+        .tab-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            background-color: #334155;
+            color: #94a3b8;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+        .tab-btn.active, .tab-btn:hover {
+            background-color: #22c55e;
+            color: #0f172a;
+        }
+
+        /* 卡片網格與樣式 */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background-color: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 25px;
+            cursor: pointer;
+            transition: transform 0.2s, border-color 0.2s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: #22c55e;
+        }
+        .card h3 {
+            color: #22c55e;
+            margin-bottom: 12px;
+            font-size: 1.2rem;
+        }
+        .card p {
+            color: #94a3b8;
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+        }
+        .tag {
+            align-self: flex-start;
+            background-color: #334155;
+            color: #38bdf8;
+            font-size: 0.8rem;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        /* 彈窗對話視窗 (Modal) */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(15, 23, 42, 0.85);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+        .modal-content {
+            background-color: #1e293b;
+            border: 2px solid #22c55e;
+            border-radius: 12px;
+            max-width: 600px;
+            width: 100%;
+            padding: 30px;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 1.5rem;
+            color: #94a3b8;
+            cursor: pointer;
+        }
+        .close-btn:hover { color: #f43f5e; }
+        .modal-title { color: #22c55e; margin-bottom: 15px; font-size: 1.4rem; }
+        .modal-body { color: #cbd5e1; font-size: 1rem; line-height: 1.8; margin-bottom: 20px; }
+
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            color: #64748b;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="#" class="logo">🎮 FPS Coach Doge Hub</a>
+        <span class="tag" style="background:#0f172a; color:#22c55e;">v1.2 Interactive</span>
+    </header>
+
+    <div class="container">
+        <div class="hero">
+            <h1>FPS 戰術殘局與電競知識庫</h1>
+            <p>由 Coach Doge 打造的冷靜戰術指引與靈敏度換算平台</p>
+        </div>
+
+        <div class="alert-box">
+            ⚠️ <strong>Coach Doge 心態防爆提醒：</strong> 進入殘局時，第一步請先按 Tab 鍵將麥克風裡咆哮的隊友 Mute 掉，保持頭腦冷靜才能拿下 Clutch！
+        </div>
+
+        <!-- 前端互動控制項 -->
+        <div class="controls">
+            <input type="text" id="searchInput" class="search-input" placeholder="🔍 輸入關鍵字搜尋戰術（例如：Valorant, CS2, 靈敏度, 急停, 煙霧）..." oninput="filterCards()">
+            
+            <div class="tab-group">
+                <button class="tab-btn active" onclick="setCategory('all', this)">全部戰術</button>
+                <button class="tab-btn" onclick="setCategory('valorant', this)">Valorant 專區</button>
+                <button class="tab-btn" onclick="setCategory('cs2', this)">CS2 觀念</button>
+                <button class="tab-btn" onclick="setCategory('sens', this)">機制與數據</button>
+            </div>
+        </div>
+
+        <!-- 戰術卡片區域 -->
+        <div class="grid" id="cardGrid">
+            
+            <div class="card" data-category="sens" data-title="跨遊戲靈敏度轉換指南" onclick="openModal('🎯 跨遊戲靈敏度轉換指南', 'Coach Doge 詳細戰術拆解：<br>1. <strong>精準換算公式</strong>：CS2 靈敏度 = Valorant 靈敏度 × 3.181（如 Val 0.35 @ 800DPI 換算為 CS2 1.113）。<br>2. <strong>eDPI 黃金區間</strong>：職業選手平均 eDPI 落在 200~400 之間，切勿頻繁調整靈敏度破壞肌肉記憶。<br>3. <strong>教練指引</strong>：改完數值後去靶場打 10 分鐘 Bot 熟悉準心移動速度！')">
+                <div>
+                    <h3>🎯 跨遊戲靈敏度轉換指南</h3>
+                    <p>收錄 Valorant 與 CS2 靈敏度精準轉換公式（CS2 Sens = Val Sens × 3.181），以及 eDPI 黃金數值計算。</p>
+                </div>
+                <span class="tag">機制數據</span>
+            </div>
+
+            <div class="card" data-category="valorant" data-title="Ascent A 點 1v2 殘局處置" onclick="openModal('💣 Ascent A 點 1v2 殘局處置', 'Coach Doge 詳細戰術拆解：<br>1. <strong>心態防爆</strong>：先按 Tab 鍵 Mute 咆哮隊友，20 秒非常充裕！<br>2. <strong>站位選擇</strong>：滿血優勢站拉長斜角（如 Hell 或 A Long），預先將準心鎖定爆頭線高度。<br>3. <strong>假解包心理戰</strong>：聽見拆包聲等 1.2~1.5 秒再拉出，逼迫對手做出假解包動作露頭，分次清掉對手！')">
+                <div>
+                    <h3>💣 Ascent A 點 1v2 殘局處置</h3>
+                    <p>解析已下包剩 20 秒時的長斜角拉槍、假解包（Fake Defuse）1.5 秒時間差與爆頭線站位技巧。</p>
+                </div>
+                <span class="tag">Valorant 戰術</span>
+            </div>
+
+            <div class="card" data-category="cs2" data-title="CS2 急停與體積雲煙霧技巧" onclick="openModal('💨 CS2 急停與體積雲煙霧技巧', 'Coach Doge 詳細戰術拆解：<br>1. <strong>Counter-Strafe 急停</strong>：移動中開槍子彈會亂飛！射擊前瞬間放開方向鍵並按反向鍵（按 A 點 D）讓速度歸零。<br>2. <strong>體積雲煙霧打洞</strong>：CS2 煙霧彈可被手榴彈短暫吹散，或被子彈打出視線洞口，善用穿煙取得戰術優勢。<br>3. <strong>教練指引</strong>：先在死鬥模式練習急停節奏，確保開槍第一發準確命中頭部。')">
+                <div>
+                    <h3>💨 CS2 急停與體積雲煙霧技巧</h3>
+                    <p>解析 Counter-Strafe 反向鍵點按消除慣性機制，以及如何利用手榴彈在體積雲煙霧（Volumetric Smoke）上開洞。</p>
+                </div>
+                <span class="tag">CS2 觀念</span>
+            </div>
+
+        </div>
+
+        <footer>
+            <p>© 2026 FPS Coach Doge. Built strictly following AGENTS.md rules.</p>
+        </footer>
+    </div>
+
+    <!-- 戰術詳情彈窗視窗 -->
+    <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <span class="close-btn" onclick="closeModalDirect()">✕</span>
+            <h2 class="modal-title" id="modalTitle">戰術標題</h2>
+            <div class="modal-body" id="modalBody">戰術內容詳情...</div>
+            <button class="tab-btn active" style="width:100%;" onclick="closeModalDirect()">收到，立即執行戰術！</button>
+        </div>
+    </div>
+
+    <!-- 前端互動邏輯 (JavaScript) -->
+    <script>
+        let currentCategory = 'all';
+
+        // 搜尋與分類過濾函數
+        function filterCards() {
+            const searchText = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('.card');
+
+            cards.forEach(card => {
+                const title = card.getAttribute('data-title').toLowerCase();
+                const content = card.innerText.toLowerCase();
+                const category = card.getAttribute('data-category');
+
+                const matchesSearch = title.includes(searchText) || content.includes(searchText);
+                const matchesCategory = (currentCategory === 'all') || (category === currentCategory);
+
+                if (matchesSearch && matchesCategory) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // 切換分類頁籤
+        function setCategory(category, btn) {
+            currentCategory = category;
+            
+            // 更新按鈕 active 狀態
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            filterCards();
+        }
+
+        // 開啟彈窗
+        function openModal(title, bodyText) {
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalBody').innerHTML = bodyText;
+            document.getElementById('modalOverlay').style.display = 'flex';
+        }
+
+        // 關閉彈窗
+        function closeModal(event) {
+            if (event.target.id === 'modalOverlay') {
+                document.getElementById('modalOverlay').style.display = 'none';
+            }
+        }
+
+        function closeModalDirect() {
+            document.getElementById('modalOverlay').style.display = 'none';
+        }
+    </script>
 </body>
 </html>
