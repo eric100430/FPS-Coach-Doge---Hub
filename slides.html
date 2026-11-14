@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FPS 核心機制與戰術新手入門教學</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: #0f172a; color: #f8fafc; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
+        .deck-container { width: 900px; height: 550px; background-color: #1e293b; border-radius: 16px; border: 2px solid #22c55e; box-shadow: 0 10px 30px rgba(0,0,0,0.5); display: flex; flex-direction: column; position: relative; padding: 40px; }
+        .slide { display: none; height: 100%; flex-direction: column; justify-content: center; }
+        .slide.active { display: flex; }
+        .slide-tag { color: #22c55e; font-size: 0.9rem; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; }
+        h1 { font-size: 2.2rem; color: #f8fafc; margin-bottom: 20px; line-height: 1.3; }
+        h2 { font-size: 1.8rem; color: #22c55e; margin-bottom: 15px; }
+        p { font-size: 1.1rem; color: #94a3b8; line-height: 1.8; margin-bottom: 15px; }
+        ul { margin-left: 25px; color: #cbd5e1; font-size: 1.05rem; line-height: 1.8; }
+        li { margin-bottom: 8px; }
+        .code-box { background: #0f172a; border-left: 4px solid #22c55e; padding: 12px 18px; font-family: monospace; color: #38bdf8; border-radius: 4px; margin-top: 10px; font-size: 1rem; }
+        .nav-bar { position: absolute; bottom: 25px; left: 40px; right: 40px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #334155; padding-top: 15px; }
+        .btn { background: #22c55e; color: #0f172a; border: none; padding: 8px 18px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .btn:hover { background: #4ade80; }
+        .btn:disabled { background: #475569; color: #94a3b8; cursor: not-allowed; }
+        .progress { color: #64748b; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+
+<div class="deck-container">
+    <!-- Slide 1: 封面 -->
+    <div class="slide active">
+        <div class="slide-tag">教學簡報 · 第 1 頁 / 共 5 頁</div>
+        <h1>🎮 FPS 核心機制與新手戰術入門</h1>
+        <p>基於專屬 LLM Wiki 知識庫整理，為完全零基礎玩家量身打造的射擊觀念教學。</p>
+        <div class="code-box">教學目標：搞懂急停原理、掌握靈敏度換算、冷靜打好殘局</div>
+    </div>
+
+    <!-- Slide 2: 靈敏度與 eDPI -->
+    <div class="slide">
+        <div class="slide-tag">機制基礎 · 第 2 頁 / 共 5 頁</div>
+        <h2>🎯 靈敏度與 eDPI 黃金法則</h2>
+        <p>很多人覺得準心飄忽不定，是因為誤用了過高的靈敏度：</p>
+        <ul>
+            <li><strong>eDPI 計算公式</strong>：<code>滑鼠硬體 DPI × 遊戲內靈敏度</code>。</li>
+            <li><strong>職業黃金區間</strong>：主流職業選手 eDPI 落在 200～400 之間。</li>
+            <li><strong>跨遊戲精準換算</strong>：<code>CS2 靈敏度 = Valorant 靈敏度 × 3.181</code>。</li>
+        </ul>
+        <div class="code-box">若在 Val 靈敏度為 0.35 (DPI 800)，CS2 應精準設為 1.113</div>
+    </div>
+
+    <!-- Slide 3: 急停射擊機制 -->
+    <div class="slide">
+        <div class="slide-tag">射擊物理 · 第 3 頁 / 共 5 頁</div>
+        <h2>⚡ CS2 急停（Counter-Strafe）機制</h2>
+        <p>戰術射擊遊戲具備嚴格的移動慣性，邊跑邊開槍子彈會大幅散射：</p>
+        <ul>
+            <li><strong>消除慣性</strong>：向左移動（按 A）時，開槍瞬間放開 A 並迅速<strong>輕點反向鍵（D）</strong>。</li>
+            <li><strong>速度歸零</strong>：將移動速度瞬間壓至 0，子彈才會第一發精準回歸準心中央。</li>
+            <li><strong>Sub-tick 判定</strong>：CS2 會精確記錄按鍵時間戳，急停節奏越俐落，勝率越高。</li>
+        </ul>
+    </div>
+
+    <!-- Slide 4: 殘局心理戰與假解包 -->
+    <div class="slide">
+        <div class="slide-tag">殘局處置 · 第 4 頁 / 共 5 頁</div>
+        <h2>💣 殘局 1v2 心理戰與時間差</h2>
+        <p>防守已安放的炸彈（Spike / C4）時，時間是防守方最大的武器：</p>
+        <ul>
+            <li><strong>不要急著露頭</strong>：聽到拆包聲先默數 1.2～1.5 秒，提防對手「假解包」誘敵。</li>
+            <li><strong>善用長斜角與交叉槍線</strong>：避免與對手近身近角拚槍，拉遠距離架好爆頭線。</li>
+            <li><strong>心態防爆</strong>：遇到隊友咆哮干擾，第一步先按 Tab 鍵將麥克風靜音（Mute）。</li>
+        </ul>
+    </div>
+
+    <!-- Slide 5: 結語與總結 -->
+    <div class="slide">
+        <div class="slide-tag">總結指引 · 第 5 頁 / 共 5 頁</div>
+        <h2>🏆 戰術思維總結</h2>
+        <p>FPS 電競不僅考驗槍法，更是一場資訊與心理的博弈：</p>
+        <ul>
+            <li>固定好合適的 eDPI，每天在靶場維持 10 分鐘肌肉記憶。</li>
+            <li>每一發子彈開出前，務必確認步伐已經透過 Counter-Strafe 煞停。</li>
+            <li>殘局時保持冷靜，聽音辨位，相信自己的戰術判斷！</li>
+        </ul>
+        <div class="code-box">Coach Doge 指引：觀念到位，下一把換你強勢 Clutch！</div>
+    </div>
+
+    <!-- 底部導覽控制列 -->
+    <div class="nav-bar">
+        <button class="btn" id="prevBtn" onclick="changeSlide(-1)" disabled>← 上一頁</button>
+        <span class="progress" id="slideIndicator">1 / 5</span>
+        <button class="btn" id="nextBtn" onclick="changeSlide(1)">下一頁 →</button>
+    </div>
+</div>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const indicator = document.getElementById('slideIndicator');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    function updateSlide() {
+        slides.forEach((s, idx) => s.classList.toggle('active', idx === currentSlide));
+        indicator.textContent = `${currentSlide + 1} / ${slides.length}`;
+        prevBtn.disabled = currentSlide === 0;
+        nextBtn.disabled = currentSlide === slides.length - 1;
+    }
+
+    function changeSlide(direction) {
+        currentSlide += direction;
+        updateSlide();
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' && currentSlide < slides.length - 1) changeSlide(1);
+        if (e.key === 'ArrowLeft' && currentSlide > 0) changeSlide(-1);
+    });
+</script>
+
+</body>
+</html>
